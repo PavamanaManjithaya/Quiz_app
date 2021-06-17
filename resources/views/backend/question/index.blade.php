@@ -1,5 +1,5 @@
 @extends('backend.layouts.master')
-@section('title','create quiz')
+@section('title','All quiz')
 @section('content')
 
 <div class="span9">
@@ -11,43 +11,42 @@
            @endif
         <div class="module">
             <div class="module-head">
-                <h3>All Quiz</h3>
+                <h3>All Questions</h3>
             </div>
             <div class="module-body">
                  <table class="table table-striped">
                      <thead>
                          <tr>
                              <th>#</th>
-                             <th>NAME</th>
-                             <th>DESCRIPTION</th>
-                             <th>MINUTES</th>
+                             <th>Question</th>
+                             <th>Quiz</th>
+                             <th>Created</th>
                              <th></th>
                              <th></th>
                              <th></th>
                          </tr>
                      </thead> 
                      <tbody>
-                         @if (count($quizes)>0)
-                         @foreach ($quizes as $key=>$quiz)
+                         @if (count($questions)>0)
+                         @foreach ($questions as $key=>$question)
                            <tr>
                                <td>{{$key+1}}</td>
-                               <td>{{$quiz->name}}</td>
-                               <td>{{$quiz->description}}</td>
-                               <td>{{$quiz->minutes}}</td>
+                               <td>{{$question->question}}</td>
+                               <td>{{$question->quiz->name}}</td>
+                               <td>{{date('F d,Y',strtotime($question->minutes))}}</td>
                                <td>
-                                <a href="{{route('quiz.question',[$quiz->id])}}"><button class="btn btn-inverse">View Question</button></a>
-
+                                   <a href="{{route('question.show',[$question->id])}}"><button class="btn btn-info">View</button></a>
                                </td>
                                <td>
-                                   <a href="{{route('quiz.edit',[$quiz->id])}}"><button class="btn btn-primary">Edit</button></a>
-                               </td>
+                                <a href="{{route('question.edit',[$question->id])}}"><button class="btn btn-primary">Edit</button></a>
+                            </td>
                                <td>
-                                     <form action="{{route('quiz.destroy',[$quiz->id])}}" id="delete-form{{$quiz->id}}" method="POST">@csrf
+                                     <form action="{{route('question.destroy',[$question->id])}}" id="delete-form{{$question->id}}" method="POST">@csrf
                                         {{method_field('DELETE')}}
                                      </form>
                                 <a href="#" onclick="if(confirm('Do You Want to delete??')){
                                     event.preventDefault();
-                                    document.getElementById('delete-form{{$quiz->id}}').submit()
+                                    document.getElementById('delete-form{{$question->id}}').submit()
                                 }
                                 else{
                                     event.preventDefault();
@@ -60,11 +59,15 @@
                            </tr>  
                          @endforeach 
                          @else
-                            <tr>No Quiz to display..</tr>  
+                            <tr>No Question to display..</tr>  
                          @endif
                          
                      </tbody>
                  </table>
+                 <div class="pagination pagination-centered">
+                    {{$questions->links()}}
+                 </div>
+                 
             </div>
         </div>    
     </div>
