@@ -1,5 +1,5 @@
 @extends('backend.layouts.master')
-@section('title','Update quiz')
+@section('title','Update Question')
 @section('content')
   <div class="span9">
       <div class="content">

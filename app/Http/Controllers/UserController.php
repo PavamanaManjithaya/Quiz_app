@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Quiz;
-class QuizController extends Controller
+Use App\Models\User;
+
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,8 +14,8 @@ class QuizController extends Controller
      */
     public function index()
     {
-        $quizes=(new Quiz)->allQuiz();
-        return view('backend.quiz.index',compact('quizes'));
+        $users=(new User)->allUser();
+        return view('backend.user.index',compact('users'));
     }
 
     /**
@@ -24,7 +25,7 @@ class QuizController extends Controller
      */
     public function create()
     {
-        return view('backend.quiz.create');
+        return view('backend.user.create');
     }
 
     /**
@@ -35,9 +36,13 @@ class QuizController extends Controller
      */
     public function store(Request $request)
     {
-        $data=$this->validateForm($request);
-        $quiz=(new Quiz)->storeQuiz($data);
-        return redirect()->back()->with('messeges','Quiz Created Successfully..');
+        $this->validate($request,[
+            'name'=>'required',
+            'email'=>'required',
+            'password'=>'required|min:3'
+        ]);
+        $user=(new User)->storeUser($request->all());
+        return redirect()->route('user.index')->with('messeges','User Created successfully..');
     }
 
     /**
@@ -59,8 +64,8 @@ class QuizController extends Controller
      */
     public function edit($id)
     {
-        $quiz=(new Quiz)->getQuizByID($id);
-        return view('backend.quiz.edit',compact('quiz'));
+        $user=(new User)->findUser($id);
+        return view('backend.user.edit',compact('user'));
     }
 
     /**
@@ -72,9 +77,11 @@ class QuizController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data=$this->validateForm($request);
-        $quiz=(new Quiz)->updateQuiz($data,$id);
-        return redirect(route('quiz.index'))->with('messeges','Quiz Upadted Successfully..');
+        $this->validate($request,[
+            'name'=>'required'
+        ]);
+        $user=(new User)->updateUser($request->all(),$id);
+        return redirect()->route('user.index')->with('messeges','User update successfully..');
     }
 
     /**
@@ -85,18 +92,12 @@ class QuizController extends Controller
      */
     public function destroy($id)
     {
-        (new Quiz)->deleteQuiz($id);
-        return redirect(route('quiz.index'))->with('messeges','Quiz Deletd Successfully..');
-    }
-    public function question($id){
-          $quizes=Quiz::with('questions')->where('id',$id)->get();
-          return view('backend.quiz.question',compact('quizes'));
-    }
-    public function validateForm($request){
-        return $this->validate($request,[
-            'name'=>'required|string',
-            'description'=>'required|min:3|max:100',
-            'minutes'=>'required|integer'
-        ]);
+         if (auth()->user()->id==$id) {
+            return redirect()->back()->with('messeges','Yo cannot delete Yourself..'); 
+
+         }
+         
+        (new User)->destroyUser($id);
+        return redirect()->route('user.index')->with('messeges','User deleted successfully..');
     }
 }
