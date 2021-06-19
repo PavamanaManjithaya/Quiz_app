@@ -32,5 +32,10 @@ Route::middleware('isAdmin')->group(function () {
     Route::get('/', function () {
         return view('admin.index');
     });
-    
+    Route::get('exam/assign', [App\Http\Controllers\ExamController::class, 'create'])->name('user.exam');
+    Route::post('exam/assign', [App\Http\Controllers\ExamController::class, 'assignExam'])->name('exam.assign');
+    Route::get('exam/user', [App\Http\Controllers\ExamController::class, 'userExam'])->name('view.assign');
+    Route::post('exam/remove', [App\Http\Controllers\ExamController::class, 'removeExam'])->name('exam.remove');
+
+
 });
