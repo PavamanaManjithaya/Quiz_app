@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Quiz;
 use App\Models\Result;
+use App\Models\Question;
 class ExamController extends Controller
 {
     public function create(){
@@ -32,5 +33,13 @@ class ExamController extends Controller
 
         }
 
+    }
+    public function getQuizQuestions(Request $request,$quizId){
+        $authUser=auth()->user()->id;
+        $quiz=Quiz::find($quizId);
+        $time=Quiz::where('id',$quizId)->value('minutes');
+        $quizQuestions=Question::where('quiz_id',$quizId)->with('answers')->get();
+        $authUserHasPlayedQuiz=Result::where(['user_id'=>$authUser,'quiz_id'=>$quizId])->get();
+        return view('quiz',compact('quiz','time','quizQuestions','authUserHasPlayedQuiz'));
     }
 }

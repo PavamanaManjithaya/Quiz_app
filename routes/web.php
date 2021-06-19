@@ -24,6 +24,9 @@ Auth::routes(
 );
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/quiz/{quizID}', [App\Http\Controllers\ExamController::class, 'getQuizQuestions'])->middleware('auth');
+
+
 Route::middleware('isAdmin')->group(function () {
     Route::resource('quiz', 'App\Http\Controllers\QuizController');
     Route::resource('question', 'App\Http\Controllers\QuestionController');
