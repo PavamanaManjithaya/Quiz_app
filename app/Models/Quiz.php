@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\User;
-use App\Models\Result;
 class Quiz extends Model
 {
     use HasFactory;
@@ -40,7 +39,7 @@ class Quiz extends Model
           $userId=$data['user'];
           return $quiz->users()->syncWithoutDetaching($userId);
     }
-    public function hasQuizattempted(){
+    public function hasQuizAttempted(){
         $attemptQuiz=[];
         $authUser=auth()->user()->id;
         $user=Result::where('user_id',$authUser)->get();

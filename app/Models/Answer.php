@@ -11,7 +11,7 @@ class Answer extends Model
     use HasFactory;
     protected $fillable = ['question_id','answer','is_correct'];
 
-    public function quiz(){
+    public function question(){
         return $this->belongsTo(Question::class);
     }
     public function storeAnswer($data,$question){
